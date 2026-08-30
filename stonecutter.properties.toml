@@ -1,0 +1,35 @@
+mod.id = "betterzombieleaders"
+mod.slug = "betterzombieleaders"
+mod.name = "Better Zombie Leaders"
+mod.group = "com.khazoda.betterzombieleaders"
+mod.version = "0.1.0"
+mod.description = "Zombie leaders drop rewards proportional to their strength"
+mod.authors = "Khazoda"
+mod.license = "GPLv3"
+mod.homepage = "https://www.khazoda.com#betterzombieleaders"
+mod.sources = "https://github.com/khazoda-mods/betterzombieleaders"
+mod.issues = "https://github.com/khazoda-mods/betterzombieleaders/issues"
+mod.discord = "https://discord.com/invite/vEZUkSxwR9"
+
+deps.fabric_loader = "0.19.3"
+deps.neoforge_loader = "[4,)"
+
+["26.1"]
+mod.mc_releases = ["26.1", "26.1.1", "26.1.2"]
+
+[fabric."26.1"]
+mod.mc_compat = ">=26.1 <26.2"
+
+[neoforge."26.1"]
+mod.mc_compat = "[26.1,26.2)"
+deps.neo_loader = "26.1.0.19-beta"
+
+["26.2"]
+mod.mc_releases = ["26.2"]
+
+[fabric."26.2"]
+mod.mc_compat = ">=26.2 <26.3"
+
+[neoforge."26.2"]
+mod.mc_compat = "[26.2,26.3)"
+deps.neo_loader = "26.2.0.62"
