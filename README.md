@@ -1,1 +1,1 @@
-better zombie leaders
+![better zombie leaders banner](https://cdn.modrinth.com/data/cached_images/f4aa45a265ae167012df3fda4150031c91f8fdc0.png)

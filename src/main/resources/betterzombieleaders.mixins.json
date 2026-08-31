@@ -2,7 +2,11 @@
   "required": true,
   "package": "com.khazoda.betterzombieleaders.mixin",
   "compatibilityLevel": "${java}",
-  "mixins": [],
+  "mixins": [
+    "LivingEntityMixin",
+    "ZombieMixin",
+    "ZombieVillagerMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

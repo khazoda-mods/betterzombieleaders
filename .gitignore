@@ -5,6 +5,7 @@ build/
 run/
 versions/
 *.iml
+*.af~lock~
 
 export/
 .env
