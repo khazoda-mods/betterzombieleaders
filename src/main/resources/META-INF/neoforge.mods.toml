@@ -5,6 +5,8 @@ license = "${license}"
 [[mods]]
 modId = "${id}"
 version = "${version}"
+logoFile = "assets/${id}/banner.png"
+logoBlur = false
 displayName = "${name}"
 displayURL = "${homepage}"
 authors = "${authors}"
@@ -21,3 +23,7 @@ side = "BOTH"
 
 [[mixins]]
 config = "betterzombieleaders.mixins.json"
+
+[modproperties.${id}]
+catalogueImageIcon = "assets/${id}/icon.png"
+catalogueBackground = "assets/${id}/background.png"

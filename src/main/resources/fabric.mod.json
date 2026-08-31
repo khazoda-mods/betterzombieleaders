@@ -4,6 +4,7 @@
   "version": "${version}",
   "name": "${name}",
   "description": "${description}",
+  "icon": "assets/${id}/icon.png",
   "authors": [
     "${authors}"
   ],
@@ -32,6 +33,10 @@
       "links": {
         "modmenu.discord": "${discord}"
       }
+    },
+    "catalogue": {
+      "banner": "assets/${id}/banner.png",
+      "background": "assets/${id}/background.png"
     }
   }
 }
