@@ -60,14 +60,14 @@ publishMods {
     dryRun.set(providers.gradleProperty("publishDryRun").map(String::toBoolean).orElse(false))
 
     val curseForgeOptions = curseforgeOptions {
-        projectId.set(providers.environmentVariable("CURSEFORGE_PROJECT_ID"))
+        projectId.set("1676491")
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
         client.set(false)
         server.set(true)
     }
 
     val modrinthOptions = modrinthOptions {
-        projectId.set(providers.environmentVariable("MODRINTH_PROJECT_ID"))
+        projectId.set("zDBsarpj")
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
         environment.set(ModrinthEnvironment.SERVER_ONLY)
     }
@@ -104,10 +104,7 @@ publishMods {
     }
 
     github {
-        repository.set(
-            providers.environmentVariable("GITHUB_REPOSITORY")
-                .orElse((property("mod.sources") as String).removePrefix("https://github.com/"))
-        )
+        repository.set("khazoda-mods/betterzombieleaders")
         accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
         commitish.set(providers.environmentVariable("GITHUB_REF_NAME").orElse("main"))
         tagName.set("v$modVersion")

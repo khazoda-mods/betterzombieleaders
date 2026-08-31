@@ -33,23 +33,13 @@ jobs:
       - name: Validate release inputs
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DRY_RUN: ${{ inputs.dry_run }}
           PUBLISH_CURSEFORGE: ${{ inputs.publish_curseforge }}
           PUBLISH_MODRINTH: ${{ inputs.publish_modrinth }}
         run: |
           test -s CHANGELOG.md
-
-          if [[ "${PUBLISH_CURSEFORGE}" == "true" ]]; then
-            : "${CURSEFORGE_PROJECT_ID:?CURSEFORGE_PROJECT_ID is not configured}"
-          fi
-
-          if [[ "${PUBLISH_MODRINTH}" == "true" ]]; then
-            : "${MODRINTH_PROJECT_ID:?MODRINTH_PROJECT_ID is not configured}"
-          fi
 
           if [[ "${DRY_RUN}" != "true" && "${PUBLISH_CURSEFORGE}" == "true" ]]; then
             : "${CURSEFORGE_API_KEY:?CURSEFORGE_API_KEY is not configured}"
@@ -89,7 +79,5 @@ jobs:
             --console plain
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
