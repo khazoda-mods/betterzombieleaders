@@ -14,8 +14,4 @@ public final class BetterZombieLeaders {
 
   private BetterZombieLeaders() {
   }
-
-  public static void init() {
-    LOGGER.info("- better zombie leaders loaded -");
-  }
 }
