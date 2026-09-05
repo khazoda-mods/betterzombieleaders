@@ -6,8 +6,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
+import static com.khazoda.betterzombieleaders.BetterZombieLeaders.ID;
+
 public final class LeaderZombie {
   private static final Identifier LEADER_BONUS = Identifier.withDefaultNamespace("leader_zombie_bonus");
+  private static final Identifier LEADER_SCALE = ID("leader_scale");
 
   private LeaderZombie() {
   }
@@ -38,7 +41,7 @@ public final class LeaderZombie {
     if (scale == null) return;
 
     if (strength > 0.0) {
-      scale.addOrReplacePermanentModifier(new AttributeModifier(LEADER_BONUS, 0.05 + strength * 0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+      scale.addOrReplacePermanentModifier(new AttributeModifier(LEADER_SCALE, 0.05 + strength * 0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
   }
 }
