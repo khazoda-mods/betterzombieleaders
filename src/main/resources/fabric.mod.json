@@ -15,6 +15,11 @@
   },
   "license": "${license}",
   "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.khazoda.betterzombieleaders.BetterZombieLeadersFabric"
+    ]
+  },
   "mixins": [
     "betterzombieleaders.mixins.json"
   ],

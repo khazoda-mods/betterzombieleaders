@@ -20,12 +20,16 @@ neoForge {
             ideName = "NC - ${sc.current.version}"
             gameDirectory = file("../../run/")
             client()
+
+            taskBefore(tasks.named("prepareClientRun"))
         }
 
         register("server") {
             ideName = "NS - ${sc.current.version}"
             gameDirectory = file("../../run/")
             server()
+
+            taskBefore(tasks.named("prepareServerRun"))
         }
     }
 }

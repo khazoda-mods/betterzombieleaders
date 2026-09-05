@@ -5,7 +5,9 @@ license = "${license}"
 [[mods]]
 modId = "${id}"
 version = "${version}"
+iconFile = "assets/${id}/icon.png"
 logoFile = "assets/${id}/banner.png"
+bannerFile = "assets/${id}/banner.png"
 logoBlur = false
 displayName = "${name}"
 displayURL = "${homepage}"
