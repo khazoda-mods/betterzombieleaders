@@ -25,8 +25,28 @@ stonecutter parameters {
 }
 
 val versionTargets = stonecutter.tree.nodes.map { node ->
-    node.metadata.version to stonecutter.properties.raw(node.metadata.version, "mod", "mc_releases").asList().map { it.toString() }
+    node.metadata.version to stonecutter.properties.raw(node.metadata.version, "mod", "mc_releases").asList()
+        .map { it.toString() }
 }.distinctBy { it.first }
+
+val publishVersions =
+    providers.environmentVariable("PUBLISH_VERSIONS").orElse(versionTargets.joinToString(" ") { it.first }).get()
+        .split(Regex("[,\\s]+")).filter { it.isNotBlank() }.toSet()
+
+val availableVersions = versionTargets.map { it.first }.toSet()
+val unknownPublishVersions = publishVersions - availableVersions
+
+require(unknownPublishVersions.isEmpty()) {
+    "Unknown publish versions: ${unknownPublishVersions.joinToString()}"
+}
+
+val publishTargets = versionTargets.filter { (version, _) ->
+    version in publishVersions
+}
+
+require(publishTargets.isNotEmpty()) {
+    "PUBLISH_VERSIONS did not select any Minecraft versions"
+}
 
 val modSlug = property("mod.slug") as String
 val modName = property("mod.name") as String
@@ -38,8 +58,11 @@ val artifactDirectory = layout.buildDirectory.dir("libs/$modVersion")
 
 fun artifactVersion(version: String) = "$modVersion+$version"
 fun artifactFile(loader: String, version: String) = "$modSlug-$loader-${artifactVersion(version)}.jar"
-fun publishTaskSuffix(loader: String, version: String) = "$loader${version.replace('.', '_')}".replaceFirstChar(Char::uppercase)
-fun artifactProvider(loader: String, version: String) = artifactDirectory.map { it.file(artifactFile(loader, version)) }
+fun publishTaskSuffix(loader: String, version: String) =
+    "$loader${version.replace('.', '_')}".replaceFirstChar(Char::uppercase)
+fun artifactProvider(loader: String, version: String) = artifactDirectory.map {
+    it.file(artifactFile(loader, version))
+}
 
 val buildAll = tasks.register("buildAll") {
     group = "build"
@@ -48,7 +71,10 @@ val buildAll = tasks.register("buildAll") {
 
 gradle.projectsEvaluated {
     buildAll.configure {
-        dependsOn(subprojects.map { it.tasks.named("buildAndCollect") })
+        dependsOn(
+            subprojects.map {
+                it.tasks.named("buildAndCollect")
+            })
     }
 }
 
@@ -57,7 +83,10 @@ publishMods {
     version.set(modVersion)
     displayName.set("$modName $modVersion")
     type.set(ReleaseType.STABLE)
-    dryRun.set(providers.gradleProperty("publishDryRun").map(String::toBoolean).orElse(false))
+
+    dryRun.set(
+        providers.gradleProperty("publishDryRun").map(String::toBoolean).orElse(false)
+    )
 
     val curseForgeOptions = curseforgeOptions {
         projectId.set("1676491")
@@ -72,7 +101,7 @@ publishMods {
         environment.set(ModrinthEnvironment.SERVER_ONLY)
     }
 
-    versionTargets.forEach { (mcVersion, mcReleases) ->
+    publishTargets.forEach { (mcVersion, mcReleases) ->
         loaders.forEach { loader ->
             val targetVersion = artifactVersion(mcVersion)
             val artifact = artifactProvider(loader, mcVersion)
@@ -106,11 +135,21 @@ publishMods {
     github {
         repository.set("khazoda-mods/betterzombieleaders")
         accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
-        commitish.set(providers.environmentVariable("GITHUB_REF_NAME").orElse("main"))
+        commitish.set(
+            providers.environmentVariable("GITHUB_REF_NAME").orElse("main")
+        )
         tagName.set("v$modVersion")
-        file.set(artifactProvider(loaders.first(), versionTargets.first().first))
-        additionalFiles.from(versionTargets.flatMap { (mcVersion, _) ->
-            loaders.map { loader -> artifactProvider(loader, mcVersion) }
-        }.drop(1))
+
+        val githubArtifacts = publishTargets.flatMap { (mcVersion, _) ->
+            loaders.map { loader ->
+                artifactProvider(loader, mcVersion)
+            }
+        }
+
+        file.set(githubArtifacts.first())
+
+        additionalFiles.from(
+            githubArtifacts.drop(1)
+        )
     }
 }

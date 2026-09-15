@@ -2,7 +2,6 @@ name: Release
 
 env:
   PUBLISH_VERSIONS: "26.3"
-  PUBLISH_LOADERS: "fabric neoforge"
 
 on:
   workflow_dispatch:
@@ -81,17 +80,9 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tasks=()
+          echo "Publishing Minecraft versions: ${PUBLISH_VERSIONS}"
 
-          for version in $PUBLISH_VERSIONS; do
-            for loader in $PUBLISH_LOADERS; do
-              tasks+=(":${version}-${loader}:publishMods")
-            done
-          done
-
-          echo "Publishing: ${tasks[*]}"
-
-          CHANGELOG="$(cat CHANGELOG.md)" ./gradlew "${tasks[@]}" \
+          CHANGELOG="$(cat CHANGELOG.md)" ./gradlew publishMods \
             -PpublishDryRun=${{ inputs.dry_run }} \
             -PpublishCurseForge=${{ inputs.publish_curseforge }} \
             -PpublishModrinth=${{ inputs.publish_modrinth }} \
