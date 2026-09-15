@@ -6,15 +6,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
+          "${loot_entry_modifier_field}": [
             {
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "max": 2.0,
-                "min": 0.0
+                "max": 2,
+                "min": 0
               },
-              "function": "minecraft:set_count"
+              "${loot_function_type_field}": "minecraft:set_count"
             }, {
               "count": {
                 "type": "minecraft:uniform",
@@ -22,13 +22,13 @@
                 "min": 0.0
               },
               "enchantment": "minecraft:looting",
-              "function": "minecraft:enchanted_count_increase"
+              "${loot_function_type_field}": "minecraft:enchanted_count_increase"
             }
           ],
           "name": "minecraft:rotten_flesh"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
   "random_sequence": "betterzombieleaders:entities/leader_zombie_bonus"

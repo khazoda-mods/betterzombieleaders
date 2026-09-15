@@ -1,5 +1,5 @@
 plugins {
-    id("net.neoforged.moddev") version "2.0.141"
+    id("net.neoforged.moddev") version "2.0.147"
     id("neoforge-mutex")
 }
 
@@ -64,9 +64,13 @@ tasks {
             register("homepage", "mod.homepage")
             register("issues", "mod.issues")
             register("neoforge_loader", "deps.neoforge_loader")
+
+            register("loot_entry_modifier_field", "loot.entry_modifier_field")
+            register("loot_function_type_field", "loot.function_type_field")
         }
 
         filesMatching("META-INF/neoforge.mods.toml") { expand(props) }
+        filesMatching("data/betterzombieleaders/loot_table/entities/leader_zombie_bonus.json") { expand(props) }
         filesMatching("*.mixins.json") { expand("java" to "JAVA_25") }
         exclude("fabric.mod.json")
     }

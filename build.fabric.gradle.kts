@@ -8,6 +8,14 @@ base.archivesName = "${property("mod.slug") as String}-fabric"
 dependencies {
     minecraft("com.mojang:minecraft:${sc.current.version}")
     implementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+
+    val fabricApiVersion: String = sc.properties["deps.fabric_api"]
+
+    implementation(fabricApi.module("fabric-resource-loader-v1", fabricApiVersion))
+    include(fabricApi.module("fabric-resource-loader-v1", fabricApiVersion))
+
+    implementation(fabricApi.module("fabric-api-base", fabricApiVersion))
+    include(fabricApi.module("fabric-api-base", fabricApiVersion))
 }
 
 loom {
@@ -20,7 +28,6 @@ loom {
     runs.configureEach {
         displayName.set("${if (name == "client") "FC" else "FS"} - ${sc.current.version}")
         appendProjectPathToDisplayName.set(false)
-        preferGradleTask.set(true)
         generateRunConfig.set(true)
         runDirectory.set(rootProject.layout.projectDirectory.dir("run"))
         jvmArguments.add("-Dmixin.debug.export=true")
@@ -59,9 +66,13 @@ tasks {
             register("issues", "mod.issues")
             register("discord", "mod.discord")
             register("fabric_loader", "deps.fabric_loader")
+
+            register("loot_entry_modifier_field", "loot.entry_modifier_field")
+            register("loot_function_type_field", "loot.function_type_field")
         }
 
         filesMatching("fabric.mod.json") { expand(props) }
+        filesMatching("data/betterzombieleaders/loot_table/entities/leader_zombie_bonus.json") { expand(props) }
         filesMatching("*.mixins.json") { expand("java" to "JAVA_25") }
         exclude("META-INF/neoforge.mods.toml")
     }
