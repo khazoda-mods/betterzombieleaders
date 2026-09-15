@@ -1,5 +1,9 @@
 name: Release
 
+env:
+  PUBLISH_VERSIONS: "26.3"
+  PUBLISH_LOADERS: "fabric neoforge"
+
 on:
   workflow_dispatch:
     inputs:
@@ -68,16 +72,28 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew buildAll --console plain
+      - name: Build all versions
+        run: ./gradlew buildAll --console plain
 
-      - run: |
-          CHANGELOG="$(cat CHANGELOG.md)" ./gradlew publishMods \
+      - name: Publish selected versions
+        env:
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tasks=()
+
+          for version in $PUBLISH_VERSIONS; do
+            for loader in $PUBLISH_LOADERS; do
+              tasks+=(":${version}-${loader}:publishMods")
+            done
+          done
+
+          echo "Publishing: ${tasks[*]}"
+
+          CHANGELOG="$(cat CHANGELOG.md)" ./gradlew "${tasks[@]}" \
             -PpublishDryRun=${{ inputs.dry_run }} \
             -PpublishCurseForge=${{ inputs.publish_curseforge }} \
             -PpublishModrinth=${{ inputs.publish_modrinth }} \
             --no-parallel \
             --console plain
-        env:
-          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
