@@ -12,10 +12,6 @@ dependencies {
     val fabricApiVersion: String = sc.properties["deps.fabric_api"]
 
     implementation(fabricApi.module("fabric-resource-loader-v1", fabricApiVersion))
-    include(fabricApi.module("fabric-resource-loader-v1", fabricApiVersion))
-
-    implementation(fabricApi.module("fabric-api-base", fabricApiVersion))
-    include(fabricApi.module("fabric-api-base", fabricApiVersion))
 }
 
 loom {
@@ -32,6 +28,8 @@ loom {
         runDirectory.set(rootProject.layout.projectDirectory.dir("run"))
         jvmArguments.add("-Dmixin.debug.export=true")
     }
+
+    uncompressNestedJars = true
 }
 
 java {
