@@ -52,6 +52,8 @@ val modSlug = property("mod.slug") as String
 val modName = property("mod.name") as String
 val modVersion = property("mod.version") as String
 val loaders = listOf("fabric", "neoforge")
+val publishingAllVersions = publishTargets.map { it.first }.toSet() == availableVersions
+val githubVersion = if (publishingAllVersions) modVersion else "$modVersion+${publishTargets.joinToString("-") { it.first }}"
 val publishCurseForge = providers.gradleProperty("publishCurseForge").map(String::toBoolean).orElse(true).get()
 val publishModrinth = providers.gradleProperty("publishModrinth").map(String::toBoolean).orElse(true).get()
 val artifactDirectory = layout.buildDirectory.dir("libs/$modVersion")
@@ -138,7 +140,9 @@ publishMods {
         commitish.set(
             providers.environmentVariable("GITHUB_REF_NAME").orElse("main")
         )
-        tagName.set("v$modVersion")
+        version.set(githubVersion)
+        displayName.set("$modName $githubVersion")
+        tagName.set("v$githubVersion")
 
         val githubArtifacts = publishTargets.flatMap { (mcVersion, _) ->
             loaders.map { loader ->
