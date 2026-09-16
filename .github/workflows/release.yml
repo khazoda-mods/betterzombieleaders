@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       minecraft_versions:
-        description: csv/space separated minecraft versions
+        description: minecraft versions to publish (csv or spaces). leave blank to publish every version.
         default: "26.3"
-        required: true
+        required: false
         type: string
       dry_run:
         description: Build without uploading
@@ -52,7 +52,6 @@ jobs:
           PUBLISH_GITHUB: ${{ inputs.publish_github }}
         run: |
           test -s CHANGELOG.md
-          test -n "${PUBLISH_VERSIONS//[[:space:],]/}"
 
           if [[ "${DRY_RUN}" != "true" && "${PUBLISH_CURSEFORGE}" == "true" ]]; then
             : "${CURSEFORGE_API_KEY:?CURSEFORGE_API_KEY is not configured}"

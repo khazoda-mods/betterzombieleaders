@@ -29,11 +29,10 @@ val versionTargets = stonecutter.tree.nodes.map { node ->
         .map { it.toString() }
 }.distinctBy { it.first }
 
-val publishVersions =
-    providers.environmentVariable("PUBLISH_VERSIONS").orElse(versionTargets.joinToString(" ") { it.first }).get()
-        .split(Regex("[,\\s]+")).filter { it.isNotBlank() }.toSet()
-
 val availableVersions = versionTargets.map { it.first }.toSet()
+val publishVersions =
+    providers.environmentVariable("PUBLISH_VERSIONS").orNull?.takeUnless { it.isBlank() }?.split(Regex("[,\\s]+"))
+        ?.filter { it.isNotBlank() }?.toSet() ?: availableVersions
 val unknownPublishVersions = publishVersions - availableVersions
 
 require(unknownPublishVersions.isEmpty()) {
