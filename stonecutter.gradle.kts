@@ -56,6 +56,7 @@ val publishingAllVersions = publishTargets.map { it.first }.toSet() == available
 val githubVersion = if (publishingAllVersions) modVersion else "$modVersion+${publishTargets.joinToString("-") { it.first }}"
 val publishCurseForge = providers.gradleProperty("publishCurseForge").map(String::toBoolean).orElse(true).get()
 val publishModrinth = providers.gradleProperty("publishModrinth").map(String::toBoolean).orElse(true).get()
+val publishGitHub = providers.gradleProperty("publishGitHub").map(String::toBoolean).orElse(true).get()
 val artifactDirectory = layout.buildDirectory.dir("libs/$modVersion")
 
 fun artifactVersion(version: String) = "$modVersion+$version"
@@ -134,26 +135,28 @@ publishMods {
         }
     }
 
-    github {
-        repository.set("khazoda-mods/betterzombieleaders")
-        accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
-        commitish.set(
-            providers.environmentVariable("GITHUB_REF_NAME").orElse("main")
-        )
-        version.set(githubVersion)
-        displayName.set("$modName $githubVersion")
-        tagName.set("v$githubVersion")
+    if (publishGitHub) {
+        github {
+            repository.set("khazoda-mods/betterzombieleaders")
+            accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
+            commitish.set(
+                providers.environmentVariable("GITHUB_REF_NAME").orElse("main")
+            )
+            version.set(githubVersion)
+            displayName.set("$modName $githubVersion")
+            tagName.set("v$githubVersion")
 
-        val githubArtifacts = publishTargets.flatMap { (mcVersion, _) ->
-            loaders.map { loader ->
-                artifactProvider(loader, mcVersion)
+            val githubArtifacts = publishTargets.flatMap { (mcVersion, _) ->
+                loaders.map { loader ->
+                    artifactProvider(loader, mcVersion)
+                }
             }
+
+            file.set(githubArtifacts.first())
+
+            additionalFiles.from(
+                githubArtifacts.drop(1)
+            )
         }
-
-        file.set(githubArtifacts.first())
-
-        additionalFiles.from(
-            githubArtifacts.drop(1)
-        )
     }
 }
