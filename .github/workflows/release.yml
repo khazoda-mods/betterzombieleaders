@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       minecraft_versions:
-        description: Minecraft versions to publish (comma or space separated)
+        description: csv/space separated minecraft versions
         default: "26.3"
         required: true
         type: string
